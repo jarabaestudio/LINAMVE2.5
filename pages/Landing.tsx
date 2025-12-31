@@ -364,6 +364,7 @@ export const Landing: React.FC = () => {
             </div>
         </div>
       
+      </div>
     </div>
   );
 };
