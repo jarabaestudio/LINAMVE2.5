@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
-    target.src = "https://via.placeholder.com/300/231F46/FFFFFF?text=ATLETA";
+    target.src = "https://placehold.co/300x300/231F46/FFFFFF?text=ATLETA";
   };
 
   return (

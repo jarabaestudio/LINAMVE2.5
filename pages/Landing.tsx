@@ -4,23 +4,24 @@ import { motion, useScroll, useTransform, AnimatePresence, Variants } from 'fram
 import { ArrowRight, ChevronRight, Calendar, MapPin, Trophy, ExternalLink, MessageSquare, Lock, Instagram } from 'lucide-react';
 import { InstagramEmbed } from 'react-social-media-embed';
 import { UPCOMING_TOURNAMENTS, RANKING_DATA } from '../constants';
-import { fetchSocialFeed } from '../services/api';
-import { SocialPost } from '../types';
+import { fetchSocialFeed, fetchRanking } from '../services/api';
+import { SocialPost, RankingEntry } from '../types';
 
-const PostSkeleton = () => (
-  <div className="w-full flex justify-center">
+const PostSkeleton = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>((props, ref) => (
+  <div ref={ref} {...props} className="w-full flex justify-center">
     <div className="w-full max-w-[328px] h-[450px] bg-linamve-primary/40 rounded-xl overflow-hidden animate-pulse border border-white/5 flex flex-col items-center justify-center">
       <Instagram className="text-white/20 mb-2" size={48} />
       <span className="text-xs text-white/20 font-poppins">Cargando contenido...</span>
     </div>
   </div>
-);
+));
+PostSkeleton.displayName = 'PostSkeleton';
 
 export const Landing: React.FC = () => {
   const featuredTournament = UPCOMING_TOURNAMENTS[0];
   // const hasFlyer = featuredTournament.flyers && featuredTournament.flyers.length > 0; // Deshabilitado para forzar fondo estático
-  const topRanking = RANKING_DATA.slice(0, 3);
   
+  const [topRanking, setTopRanking] = useState<RankingEntry[]>([]);
   const [socialPosts, setSocialPosts] = useState<SocialPost[]>([]);
   const [accountName, setAccountName] = useState('@LINAMVEOFFICIAL');
   const [isLoadingSocial, setIsLoadingSocial] = useState(true);
@@ -33,6 +34,17 @@ export const Landing: React.FC = () => {
   ];
 
   useEffect(() => {
+    // Cargar rankings reales del CSV dinámicamente
+    fetchRanking().then(ranking => {
+      if (ranking && ranking.length > 0) {
+        setTopRanking(ranking.slice(0, 3));
+      } else {
+        setTopRanking(RANKING_DATA.slice(0, 3));
+      }
+    }).catch(() => {
+      setTopRanking(RANKING_DATA.slice(0, 3));
+    });
+
     setIsLoadingSocial(true);
     fetchSocialFeed().then(data => {
         if (data && data.posts && data.posts.length > 0) {
@@ -41,7 +53,7 @@ export const Landing: React.FC = () => {
         } else {
            setSocialPosts(DEFAULT_POSTS);
         }
-        setIsLoadingSocial(false);
+         setIsLoadingSocial(false);
     }).catch(e => {
         setSocialPosts(DEFAULT_POSTS);
         setIsLoadingSocial(false);
@@ -91,7 +103,7 @@ export const Landing: React.FC = () => {
       {/* FONDO FIJO (PARALLAX) - Cubre toda la pantalla base */}
       <div className="fixed inset-0 w-full h-full z-0">
         <img 
-          src="https://lightcoral-owl-713849.hostingersite.com/img%20LINAMVE/frame_094_delay-0.04s.webp" 
+          src="https://studiojaraba.com/img/FONDO_EVENT.webp" 
           alt="LINAMVE Official Cover" 
           className="w-full h-full object-cover"
         />
@@ -182,7 +194,7 @@ export const Landing: React.FC = () => {
             <div className="relative w-full min-h-[450px] md:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl group border border-white/10 bg-linamve-primary/80 backdrop-blur-xl">
                 <div className="absolute inset-0 z-0">
                     <img 
-                        src="https://lightcoral-owl-713849.hostingersite.com/IMG/FONDO_EVENT.webp" 
+                        src="https://studiojaraba.com/img/FONDO_EVENT.webp" 
                         alt="Background Featured Event"
                         className="w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-105" 
                     />
@@ -254,7 +266,12 @@ export const Landing: React.FC = () => {
                                 'bg-gradient-to-br from-amber-700 to-amber-900 text-white'}`}>
                             {athlete.rank}
                             </div>
-                            <img src={athlete.avatar} alt={athlete.athleteName} className="w-12 h-12 rounded-full object-cover border-2 border-white/10" />
+                            <img 
+                              src={athlete.avatar} 
+                              alt={athlete.athleteName} 
+                              onError={(e) => {(e.target as HTMLImageElement).src = 'https://placehold.co/150x150/0F0E17/FFFFFF?text=ATLETA'}}
+                              className="w-12 h-12 rounded-full object-cover border-2 border-white/10 bg-gray-800" 
+                            />
                             <div>
                             <h4 className="text-white font-teko text-xl uppercase leading-none">{athlete.athleteName}</h4>
                             <span className="text-xs text-gray-400 uppercase tracking-wider font-poppins">{athlete.points} PTS</span>

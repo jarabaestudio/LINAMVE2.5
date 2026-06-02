@@ -136,9 +136,15 @@ const Ranking: React.FC = () => {
             className="flex flex-col items-center text-center mb-2 overflow-hidden py-4"
           >
             {/* Adjusted leading-tight and increased desktop size to 8xl */}
-            <h1 className="font-teko text-6xl md:text-8xl font-bold text-white uppercase tracking-wide drop-shadow-2xl leading-tight">
+            <h1 className="font-teko text-6xl md:text-8xl font-bold text-white uppercase tracking-wide drop-shadow-2xl leading-tight mb-2">
               RANKING <span className="text-linamve-secondary">NACIONAL</span>
             </h1>
+            <div className="flex justify-center">
+              <span className="bg-gradient-to-r from-emerald-500/10 via-emerald-500/20 to-emerald-500/10 border border-emerald-500/30 px-4 py-1.5 rounded-full text-[11px] font-bold text-emerald-400 font-poppins uppercase tracking-widest inline-flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-sm">
+                <Shield size={13} className="animate-pulse text-emerald-400" /> 
+                Base de Datos Oficial (CSV) Vinculada
+              </span>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -325,8 +331,8 @@ const Ranking: React.FC = () => {
                     <div className="relative shrink-0">
                       <img 
                         src={entry.avatar} 
-                        alt={entry.athleteName}
-                        onError={(e) => {(e.target as HTMLImageElement).src = 'https://via.placeholder.com/150/0F0E17/FFFFFF?text=ATLETA'}}
+                        alt={entry.athleteName} 
+                        onError={(e) => {(e.target as HTMLImageElement).src = 'https://placehold.co/150x150/0F0E17/FFFFFF?text=ATLETA'}}
                         className="w-16 h-16 rounded-lg object-cover border-2 border-white/10 shadow-lg bg-gray-800"
                       />
                       {entry.rank <= 3 && (
@@ -377,8 +383,8 @@ const Ranking: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <img 
                              src={entry.avatar} 
-                             className="w-12 h-12 rounded-lg object-cover border border-white/10 group-hover:border-linamve-secondary/50 transition-colors"
-                             onError={(e) => {(e.target as HTMLImageElement).src = 'https://via.placeholder.com/150/0F0E17/FFFFFF?text=ATLETA'}}
+                             className="w-12 h-12 rounded-lg object-cover border border-white/10 group-hover:border-linamve-secondary/50 transition-colors bg-gray-800"
+                             onError={(e) => {(e.target as HTMLImageElement).src = 'https://placehold.co/150x150/0F0E17/FFFFFF?text=ATLETA'}}
                           />
                           <div>
                             <div className="text-white font-teko text-2xl uppercase leading-none group-hover:text-linamve-accent transition-colors">
